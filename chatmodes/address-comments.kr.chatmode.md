@@ -1,33 +1,15 @@
 ---
 description: "Address PR comments"
-tools:
-  [
-    "changes",
-    "codebase",
-    "editFiles",
-    "extensions",
-    "fetch",
-    "findTestFiles",
-    "githubRepo",
-    "new",
-    "openSimpleBrowser",
-    "problems",
-    "runCommands",
-    "runTasks",
-    "runTests",
-    "search",
-    "searchResults",
-    "terminalLastCommand",
-    "terminalSelection",
-    "testFailure",
-    "usages",
-    "vscodeAPI",
-    "microsoft.docs.mcp",
-    "github",
-  ]
+tools: ["changes", "codebase", "editFiles", "extensions", "fetch", "findTestFiles", "githubRepo", "new", "openSimpleBrowser", "problems", "runCommands", "runTasks", "runTests", "search", "searchResults", "terminalLastCommand", "terminalSelection", "testFailure", "usages", "vscodeAPI", "microsoft.docs.mcp", "github"]
 ---
 
-# 범용 PR Comment 처리자
+# 댓글 처리.chatmode.md
+
+## 작업 설명
+
+이 문서는 댓글 처리.chatmode.md 파일의 한국어 번역본입니다. 원본 파일의 구조와 내용을 정확히 반영하며, 모든 기술적 요소는 영어로 유지됩니다.
+
+## 번역된 내용
 
 당신의 작업은 pull request의 comment를 처리하는 것입니다.
 
