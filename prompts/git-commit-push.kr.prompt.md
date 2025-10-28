@@ -1,43 +1,96 @@
-# YOUR TASK
+# Git Commit and Push (자동 언어)
 
-`git commit` 및 `git push` 명령어를 사용하여 변경 사항을 커밋하고 원격 저장소에 푸시하십시오.
+당신은 Git 및 DevOps 전문가로서 커밋을 자동화합니다.  
+변경 사항을 감지하고, 요약하며, Conventional Commit 메시지를 생성하고, 푸시합니다.  
+`{input:language}`가 "Kor"인 경우, 커밋 메시지와 설명은 **한국어**로 작성되어야 합니다(기술 용어는 영어 그대로 유지).  
+그 외의 경우, 메시지와 요약은 **영어**로만 작성합니다.
 
-## 지침
+## 가드레일
 
-1. **커밋 메시지 작성:**
+- 큰 파일의 전체 diff를 포함하지 마세요. `--stat` 또는 `--unified=0`으로 요약하세요.
+- 바이너리 파일이나 민감한 파일(예: _.key, _.pem, .env)은 건너뛰세요.
+- 커밋 메시지는 항상 Conventional Commits 표준을 따라야 합니다.
 
-   - 커밋 메시지는 간결하고 명확해야 합니다.
-   - 첫 번째 줄은 50자 이내로 유지하고, 필요하면 추가 설명을 빈 줄 뒤에 작성하십시오.
+## 단계
 
-2. **단계별 명령어:**
+1. **변경 사항 감지**
 
-   - `git add .` 또는 특정 파일을 추가합니다.
-   - `git commit -m "메시지"`를 사용하여 커밋합니다.
-   - `git push origin <branch>`를 사용하여 변경 사항을 푸시합니다.
+   - `git status --porcelain=v1`을 실행하여 파일 변경 사항을 나열합니다.
+   - 변경 사항이 없으면, `No changes to commit.`을 출력하고 중지합니다.
 
-3. **에러 처리:**
+2. **변경 사항 요약**
 
-   - 충돌이 발생하면 `git pull`을 사용하여 최신 변경 사항을 병합한 후 다시 시도하십시오.
-   - 인증 문제가 발생하면 자격 증명을 확인하십시오.
+   - `git diff --stat`을 실행하여 추가/수정/삭제된 파일을 요약합니다.
+   - 작은 파일의 경우, 최소한의 `git diff --unified=0` hunk를 수집합니다.
+   - JSON 요약을 준비합니다:
+     ```json
+     {
+       "language": "{input:language}",
+       "branch": "<branch>",
+       "files": [{ "path": "src/core/Validator.cs", "status": "M", "additions": 15, "deletions": 2 }],
+       "totals": { "filesChanged": 3, "insertions": 47, "deletions": 12 }
+     }
+     ```
 
-4. **모범 사례:**
-   - 관련 없는 변경 사항을 포함하지 마십시오.
-   - 커밋 메시지에 작업 ID 또는 관련 이슈 번호를 포함하십시오.
+3. **커밋 메시지 생성**
 
-## 예제
+   - JSON 요약을 사용하여 다음 규칙에 따라 메시지를 생성합니다:
 
-```bash
-# 모든 변경 사항 추가
-git add .
+     ```
+     if {input:language} == "Kor":
+       <type>(<scope>): <한글 제목>
 
-# 커밋 메시지 작성
-git commit -m "Fix: resolve login issue (#123)"
+       <body>
+       - 변경된 주요 내용 요약 (기술용어는 English 그대로 유지)
+       - 중요 변경 사항을 항목으로 작성
+       - Optional: 관련 이슈 번호 포함
 
-# 변경 사항 푸시
-git push origin main
+       <footer>
+       - 관련 이슈: #123
+       - BREAKING CHANGE: <설명>
+     else:
+       <type>(<scope>): <English summary>
+
+       <body>
+       - Summarize key changes in English.
+       - Mention affected modules or features.
+       - Optional: add issue reference.
+
+       <footer>
+       - Closes: #123
+       - BREAKING CHANGE: <explanation>
+     ```
+
+   - 지원되는 `<type>`: feat, fix, docs, refactor, style, perf, test, build, ci, chore, revert.
+   - 헤더는 ≤ 72자 이내로 유지하세요.
+
+4. **커밋 및 푸시**
+
+   - `git add .`
+   - `git commit -m "<header>" -m "<body>"`
+   - `git push`
+
+5. **출력**
+   - 감지된 변경 사항을 표시합니다.
+   - 생성된 커밋 메시지를 표시합니다.
+   - 성공을 확인하거나 의미 있는 오류를 표시합니다.
+
+## 출력 예시
+
+### `{input:language}` = "Kor"인 경우
+
+```plaintext
+변경 사항 감지됨:
+- 수정됨: src/Order/OrderService.cs (+34 -12)
+- 추가됨: docs/adr/2025-10-28-order-validation.md
+
+커밋 메시지:
+feat(order): 주문 검증 로직 개선 및 문서 추가
+
+- 주문 처리 과정의 Validation 규칙 강화
+- ADR 문서 추가로 신규 정책 정의
+
+관련 이슈: #132
+
+변경사항이 정상적으로 push 되었습니다.
 ```
-
-## 참고 리소스
-
-- [Git 공식 문서](https://git-scm.com/doc)
-- [Git 커밋 메시지 작성 가이드](https://chris.beams.io/posts/git-commit/)
