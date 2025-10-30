@@ -2,7 +2,7 @@
 description: "Automatically detect changes, generate a commit message, and push to the remote repository."
 mode: "agent"
 tools: ["runCommands"]
-model: GPT-4o
+model: Claude Sonnet 4.5
 ---
 
 # Git Commit and Push
